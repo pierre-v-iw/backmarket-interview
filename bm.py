@@ -22,7 +22,7 @@ if __name__ == "__main__":
 	bq.create_table_from_csv("fabled-archive-306817.backmarket.catalog_raw", local_file)
 	
 	# Create table for FT A from raw data
-	bq.create_table_from_query("fabled-archive-306817.backmarket.catalog_fta", "./product_catalog_with_image.sql")
+	bq.create_table_from_query("fabled-archive-306817.backmarket.catalog_fta", "./sql/product_catalog_with_image.sql")
 	
 	# Create table for FT B from raw data
-	bq.create_table_from_query("fabled-archive-306817.backmarket.catalog_ftb", "./product_catalog_samsung_without_image.sql")
+	bq.create_table_from_query("fabled-archive-306817.backmarket.catalog_ftb", "./sql/product_catalog_samsung_without_image.sql")

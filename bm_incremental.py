@@ -5,16 +5,17 @@ from datetime import datetime
 from bq_helper import BqClientHelper
 
 def load_catalog(path, date):
+	""" Load a raw catalog file into BigQuery partitioned table and apply downstream processing """
 	file = path.format(date)
 	
 	# Insert it as raw data partition table in Bigquery
 	bq.create_table_from_csv("fabled-archive-306817.backmarket.catalog_inc_raw", file, partition=date)
 	
 	# Create partition in table for FT A from raw data
-	bq.create_table_from_query("fabled-archive-306817.backmarket.catalog_inc_fta", "./product_catalog_with_image.sql", partition=date)
+	bq.create_table_from_query("fabled-archive-306817.backmarket.catalog_inc_fta", "./sql/product_catalog_with_image.sql", partition=date)
 	
 	# Create partition in table for FT B from raw data
-	bq.create_table_from_query("fabled-archive-306817.backmarket.catalog_inc_ftb", "./product_catalog_samsung_without_image.sql", partition=date)	
+	bq.create_table_from_query("fabled-archive-306817.backmarket.catalog_inc_ftb", "./sql/product_catalog_samsung_without_image.sql", partition=date)	
 
 	
 if __name__ == "__main__":
