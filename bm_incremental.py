@@ -4,23 +4,31 @@ from datetime import datetime
 
 from bq_helper import BqClientHelper
 
+project_id = 'fabled-archive-306817'
+conf = {
+	'raw': '{}.backmarket.catalog_inc_raw'.format(project_id)
+	'ftA': '{}.backmarket.catalog_inc_fta'.format(project_id)
+	'ftB': '{}.backmarket.catalog_inc_ftb'.format(project_id)
+}
+
 def load_catalog(path, date):
 	""" Load a raw catalog file into BigQuery partitioned table and apply downstream processing """
 	file = path.format(date)
 	
-	# Insert it as raw data partition table in Bigquery
-	bq.create_table_from_csv("fabled-archive-306817.backmarket.catalog_inc_raw", file, partition=date)
-	
-	# Create partition in table for FT A from raw data
-	bq.create_table_from_query("fabled-archive-306817.backmarket.catalog_inc_fta", "./sql/product_catalog_with_image.sql", partition=date)
-	
-	# Create partition in table for FT B from raw data
-	bq.create_table_from_query("fabled-archive-306817.backmarket.catalog_inc_ftb", "./sql/product_catalog_samsung_without_image.sql", partition=date)	
-
-	
-if __name__ == "__main__":
 	bq = BqClientHelper()
 	
+	# Insert data as raw data partition table in Bigquery
+	bq.create_table_from_csv(conf['raw'], file, partition=date)
+	
+	# Create partition in table for FT A from raw data
+	bq.create_table_from_query(conf['ftA'], "./sql/product_catalog_with_image.sql", partition=date)
+	
+	# Create partition in table for FT B from raw data
+	bq.create_table_from_query(conf['ftB'], "./sql/product_catalog_samsung_without_image.sql", partition=date)	
+
+
+if __name__ == "__main__":
+	""" Load catalog in Bigquery. We suppose credentials are setup in the environment"""
 	dates = ["20210403", "20210404"]
 
 	local_file = "./product_catalog_{}.csv"

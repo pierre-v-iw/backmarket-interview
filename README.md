@@ -7,6 +7,7 @@ You can develop & refactor your code (using your versioning tool) following this
 3. Make the data available in BigQuery for the feature team B which wants to understand which Samsung products released after 2000 have no images 
 
 >The bm.py retrieves the data from the s3 link and makes the data available in BigQuery through 3 tables : raw & two specific tables for feature teams
+>To test : change the project_id in the script, and the schema if the configuration dictionary if needed. It's assumed the credentials are setup in the environment
 
 Now Back Market is growing so fast, there are lot more data to import into GCP. How would you adapt your code to scale it up to handle the increasing amount?  
 
