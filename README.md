@@ -1,4 +1,4 @@
-# Back Market Data Engineering Serve team
+# Back Market Data Engineering Serve team Interview
 
 ### Data Pipeline Assessment
 You can develop & refactor your code (using your versioning tool) following this pipeline:
@@ -12,17 +12,16 @@ Now Back Market is growing so fast, there are lot more data to import into GCP. 
 
 >The bm.py imports data with this unique file as a full dataset, erasing the previous one. It works with a small volumetry but with higher amounts of data, it should be imported incrementally.
 >I've added two files in the repository to be used as an example. It should be seen either as an extract of a database made by an cron 
->(for example by getting data from an operational database / raw table with a filter on a created_at/updated_at field in the table to retrieve latest products added/updated) or a file made available by a data producer.
+>(for example by getting data from an operational database / raw table with a filter on a created_at/updated_at field in the table to retrieve latest products added/updated, if it's possible) or a file made available by a data producer.
 
 >The bm_incremental.py script is designed to retrieve a data file with a specific date (the extraction part from the source is omitted, let's say it's already there) to insert it in a BigQuery partition.
+>The behaviour used (separate tables per partition and erasing them at loading time) is very Bigquery-centric but it's done with more traditional DWH or even RDBMS by deleting & inserting/updating data to have idempotent pipelines
+
+![Schema](/resources/schema.PNG)
 
 Eventually, more and more feature teams want to expose data and we want to provide a standard way of doing so. How would you build a tooling library and make it available to them (deployment, versioning, security, legal, etc.)?
 
+>A tooling library could be developed by the team responsible of the DWH to make external teams able to push data to the DWH without having to develop specific code and handle access control by themselves.
+>The solution will be described as a separate document in the resources directory of this repository
 
-### Tips:
-1. Do not reinvent the wheel
-2. Do not hesitate to make assumptions and to share them
-3. Think about the quality of the code
-4. Handle the common errors, what if we start again your code?
-5. Take the time you need
-6. Enjoy!
+The library could be available in a git repository and pushed by the CI to a pypi index as a versioning package. Every time the DWH team pushes changes on the code, a new tag would be generated 
