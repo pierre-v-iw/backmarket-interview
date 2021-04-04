@@ -1,10 +1,9 @@
 import urllib.request
 
-from datetime import datetime
-
 from bq_helper import BqClientHelper
 
 project_id = 'fabled-archive-306817'
+
 conf = {
 	'raw': '{}.backmarket.catalog_inc_raw'.format(project_id),
 	'ftA': '{}.backmarket.catalog_inc_fta'.format(project_id),
