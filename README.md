@@ -6,7 +6,7 @@ You can develop & refactor your code (using your versioning tool) following this
 2. Make the data available in BigQuery for the feature team A which wants only rows for product with an image
 3. Make the data available in BigQuery for the feature team B which wants to understand which Samsung products released after 2000 have no images 
 
->The bm.py retrieves the data from the s3 link and makes the data available in BigQuery through 3 tables : raw & two specific tables for feature teams*
+>The bm.py retrieves the data from the s3 link and makes the data available in BigQuery through 3 tables : raw & two specific tables for feature teams
 
 Now Back Market is growing so fast, there are lot more data to import into GCP. How would you adapt your code to scale it up to handle the increasing amount?  
 

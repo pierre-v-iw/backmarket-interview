@@ -7,6 +7,7 @@ def download_file(url, file_name):
 	logging.info("Download file : " + url)
 	urllib.request.urlretrieve(url, file_name)
 
+	
 if __name__ == "__main__":
 	bq = BqClientHelper()
 

@@ -16,14 +16,21 @@ class BqClientHelper():
 			return out_f.read()
 
 			
-	def create_table_from_query(self, table_id, sql_path, write_disposition='WRITE_TRUNCATE'):
+	def create_table_from_query(self, table_id, sql_path, write_disposition='WRITE_TRUNCATE', partition=None):
 		""" Create BQ table using query """
+
+		if partition:
+			table_id = table_id + "${}".format(partition)
 		
 		sql = self.load_file(sql_path)
 		
 		print("Execute query : {}".format(sql))
 		
-		job_config = bigquery.QueryJobConfig(destination=table_id, write_disposition=write_disposition)
+		job_config = bigquery.QueryJobConfig(
+			destination=table_id, 
+			write_disposition=write_disposition, 
+			time_partitioning = bigquery.TimePartitioning(type_=bigquery.TimePartitioningType.DAY)
+		)
 
 		# Launch the query
 		query_job = self._client.query(sql, job_config=job_config)
@@ -34,12 +41,16 @@ class BqClientHelper():
 		print("Query results loaded to the table {}".format(table_id))	
 		
 		
-	def create_table_from_csv(self, table_id, path, write_disposition='WRITE_TRUNCATE'):
+	def create_table_from_csv(self, table_id, path, write_disposition='WRITE_TRUNCATE', partition=None):
 		""" Create table from CSV file, with schema autodetection """
+		
+		if partition:
+			table_id = table_id + "${}".format(partition)
 		
 		# Load CSV with schema autodetection to be lazy (would be better with a fixed schema, especially in production)
 		job_config = bigquery.LoadJobConfig(
 			source_format=bigquery.SourceFormat.CSV,
+			time_partitioning = bigquery.TimePartitioning(type_=bigquery.TimePartitioningType.DAY),
 			write_disposition=write_disposition,
 			autodetect=True
 		)
