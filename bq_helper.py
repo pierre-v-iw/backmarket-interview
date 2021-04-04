@@ -2,7 +2,7 @@ from google.cloud import bigquery
 
 class BqClientHelper():
 	"""
-		BQ Helper class
+		BQ Helper class to load data into Bigquery
 	"""
 
 	def __init__(self):
