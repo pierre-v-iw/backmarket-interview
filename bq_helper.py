@@ -29,8 +29,9 @@ class BqClientHelper():
 		job_config = bigquery.QueryJobConfig(
 			destination=table_id, 
 			write_disposition=write_disposition, 
-			time_partitioning = bigquery.TimePartitioning(type_=bigquery.TimePartitioningType.DAY)
 		)
+		if partition:
+			job_config.time_partitioning = bigquery.TimePartitioning(type_=bigquery.TimePartitioningType.DAY)
 
 		# Launch the query
 		query_job = self._client.query(sql, job_config=job_config)
@@ -50,10 +51,11 @@ class BqClientHelper():
 		# Load CSV with schema autodetection to be lazy (would be better with a fixed schema, especially in production)
 		job_config = bigquery.LoadJobConfig(
 			source_format=bigquery.SourceFormat.CSV,
-			time_partitioning = bigquery.TimePartitioning(type_=bigquery.TimePartitioningType.DAY),
 			write_disposition=write_disposition,
 			autodetect=True
 		)
+		if partition:
+			job_config.time_partitioning = bigquery.TimePartitioning(type_=bigquery.TimePartitioningType.DAY)
 		
 		# Load BQ table from file
 		with open(path, "rb") as source_file:

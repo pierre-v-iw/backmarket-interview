@@ -5,14 +5,14 @@ from bq_helper import BqClientHelper
 project_id = 'fabled-archive-306817'
 
 conf = {
-	'raw': '{}.backmarket.catalog_raw'.format(project_id)
-	'ftA': '{}.backmarket.catalog_fta'.format(project_id)
+	'raw': '{}.backmarket.catalog_raw'.format(project_id),
+	'ftA': '{}.backmarket.catalog_fta'.format(project_id),
 	'ftB': '{}.backmarket.catalog_ftb'.format(project_id)
 }
 
 def download_file(url, file_name):
 	""" Retrieve file from path, to get s3-hosted public file (no need to use the s3 API) """
-	logging.info("Download file : " + url)
+	print("Download file : " + url)
 	urllib.request.urlretrieve(url, file_name)
 
 

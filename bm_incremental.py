@@ -6,8 +6,8 @@ from bq_helper import BqClientHelper
 
 project_id = 'fabled-archive-306817'
 conf = {
-	'raw': '{}.backmarket.catalog_inc_raw'.format(project_id)
-	'ftA': '{}.backmarket.catalog_inc_fta'.format(project_id)
+	'raw': '{}.backmarket.catalog_inc_raw'.format(project_id),
+	'ftA': '{}.backmarket.catalog_inc_fta'.format(project_id),
 	'ftB': '{}.backmarket.catalog_inc_ftb'.format(project_id)
 }
 
@@ -34,5 +34,6 @@ if __name__ == "__main__":
 	local_file = "./product_catalog_{}.csv"
 	
 	for d in dates:
+		print("Load catalog data for date={}".format(d))
 		# This should be seen as an ETL job executed once a day (and which can be re-executed as many as times as wanted, see loop as a airflow backfill)
 		load_catalog(local_file, date=d)
