@@ -3,11 +3,9 @@ import urllib.request
 
 from bq_helper import BqClientHelper
 
-def load_catalog(path, conf, date):
+def load_catalog(bq, path, conf, date):
 	""" Load a raw catalog file into BigQuery partitioned table and apply downstream processing """
 	file = path.format(date)
-	
-	bq = BqClientHelper()
 	
 	# Insert data as raw data partition table in Bigquery
 	bq.create_table_from_csv(conf['raw'], file, partition=date)
@@ -37,7 +35,9 @@ if __name__ == "__main__":
 	}	
 	
 	local_file = "./product_catalog_{}.csv"
+	
+	bq = BqClientHelper()
 	for d in dates:
 		print("Load catalog data for date={}".format(d))
 		# This should be seen as an ETL job executed once a day (and which can be re-executed as many as times as wanted, see loop as a airflow backfill)
-		load_catalog(local_file, conf, date=d)
+		load_catalog(bq, local_file, conf, date=d)
