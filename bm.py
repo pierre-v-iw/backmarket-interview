@@ -1,14 +1,7 @@
 import urllib.request
+import argparse
 
 from bq_helper import BqClientHelper
-
-project_id = 'fabled-archive-306817'
-
-conf = {
-	'raw': '{}.backmarket.catalog_raw'.format(project_id),
-	'ftA': '{}.backmarket.catalog_fta'.format(project_id),
-	'ftB': '{}.backmarket.catalog_ftb'.format(project_id)
-}
 
 def download_file(url, file_name):
 	""" Retrieve file from path, to get s3-hosted public file (no need to use the s3 API) """
@@ -16,7 +9,7 @@ def download_file(url, file_name):
 	urllib.request.urlretrieve(url, file_name)
 
 
-def load_catalog(input_data):
+def load_catalog(input_data, conf):
 	local_file = "./product_catalog.csv"
 	
 	bq = BqClientHelper()
@@ -37,4 +30,19 @@ def load_catalog(input_data):
 if __name__ == "__main__":
 	""" Load catalog in Bigquery. We suppose credentials are setup in the environment"""
 	input_data = "https://backmarket-data-jobs.s3-eu-west-1.amazonaws.com/data/product_catalog.csv"
-	load_catalog(input_data)
+	
+	parser = argparse.ArgumentParser(description='BigQuery import')
+	parser.add_argument('--project', dest='project', type=str, nargs='?', default ='fabled-archive-306817', help='BigQuery project to load data')
+	parser.add_argument('--dataset', dest='dataset', type=str, nargs='?', default ='backmarket', help='BigQuery dataset to load data')
+	
+	args = parser.parse_args()
+	
+	# Build configuration from arguments
+	conf = {
+		'raw': '{}.{}.catalog_raw'.format(args.project, args.dataset),
+		'ftA': '{}.{}.catalog_fta'.format(args.project, args.dataset),
+		'ftB': '{}.{}.catalog_ftb'.format(args.project, args.dataset)
+	}
+	
+	# Load catalog files in BQ
+	load_catalog(input_data, conf)

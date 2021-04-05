@@ -1,16 +1,9 @@
+import argparse
 import urllib.request
 
 from bq_helper import BqClientHelper
 
-project_id = 'fabled-archive-306817'
-
-conf = {
-	'raw': '{}.backmarket.catalog_inc_raw'.format(project_id),
-	'ftA': '{}.backmarket.catalog_inc_fta'.format(project_id),
-	'ftB': '{}.backmarket.catalog_inc_ftb'.format(project_id)
-}
-
-def load_catalog(path, date):
+def load_catalog(path, conf, date):
 	""" Load a raw catalog file into BigQuery partitioned table and apply downstream processing """
 	file = path.format(date)
 	
@@ -30,9 +23,21 @@ if __name__ == "__main__":
 	""" Load catalog in Bigquery. We suppose credentials are setup in the environment"""
 	dates = ["20210403", "20210404"]
 
-	local_file = "./product_catalog_{}.csv"
+	parser = argparse.ArgumentParser(description='BigQuery import')
+	parser.add_argument('--project', dest='project', type=str, nargs='?', default ='fabled-archive-306817', help='BigQuery project to load data')
+	parser.add_argument('--dataset', dest='dataset', type=str, nargs='?', default ='backmarket', help='BigQuery dataset to load data')
 	
+	args = parser.parse_args()
+	
+	# Build configuration from arguments
+	conf = {
+		'raw': '{}.{}.catalog_inc_raw'.format(args.project, args.dataset),
+		'ftA': '{}.{}.catalog_inc_fta'.format(args.project, args.dataset),
+		'ftB': '{}.{}.catalog_inc_ftb'.format(args.project, args.dataset)
+	}	
+	
+	local_file = "./product_catalog_{}.csv"
 	for d in dates:
 		print("Load catalog data for date={}".format(d))
 		# This should be seen as an ETL job executed once a day (and which can be re-executed as many as times as wanted, see loop as a airflow backfill)
-		load_catalog(local_file, date=d)
+		load_catalog(local_file, conf, date=d)
