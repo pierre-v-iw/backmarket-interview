@@ -1,4 +1,5 @@
 from google.cloud import bigquery
+from jinja2 import Template
 
 class BqClientHelper():
 	"""
@@ -10,19 +11,20 @@ class BqClientHelper():
 		self._client = bigquery.Client()
 		
 		
-	def load_file(self, sql_path):
-		""" Load plain text file from path """
+	def load_sql(self, sql_path, table_id):
+		""" Load SQL file from path """
 		with open(sql_path, "r") as out_f:
-			return out_f.read()
+			template = Template(out_f.read())
+			return template.render(table_id=table_id)
 
 			
-	def create_table_from_query(self, table_id, sql_path, write_disposition='WRITE_TRUNCATE', partition=None):
+	def create_table_from_query(self, table_id, source_table_id, sql_path, write_disposition='WRITE_TRUNCATE', partition=None):
 		""" Create BQ table using query """
 
 		if partition:
 			table_id = table_id + "${}".format(partition)
 		
-		sql = self.load_file(sql_path)
+		sql = self.load_sql(sql_path, source_table_id)
 		
 		print("Execute query : {}".format(sql))
 		

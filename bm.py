@@ -21,10 +21,10 @@ def load_catalog(input_data, conf):
 	bq.create_table_from_csv(conf['raw'], local_file)
 	
 	# Create table for FT A from raw data
-	bq.create_table_from_query(conf['ftA'], "./sql/product_catalog_with_image.sql")
+	bq.create_table_from_query(conf['ftA'], conf['raw'], "./sql/product_catalog_with_image.sql")
 	
 	# Create table for FT B from raw data
-	bq.create_table_from_query(conf['ftB'], "./sql/product_catalog_samsung_without_image.sql")
+	bq.create_table_from_query(conf['ftB'], conf['raw'], "./sql/product_catalog_samsung_without_image.sql")
 
 	
 if __name__ == "__main__":

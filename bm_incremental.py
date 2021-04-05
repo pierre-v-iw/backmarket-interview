@@ -13,10 +13,10 @@ def load_catalog(path, conf, date):
 	bq.create_table_from_csv(conf['raw'], file, partition=date)
 	
 	# Create partition in table for FT A from raw data
-	bq.create_table_from_query(conf['ftA'], "./sql/product_catalog_with_image.sql", partition=date)
+	bq.create_table_from_query(conf['ftA'], conf['raw'], "./sql/product_catalog_with_image.sql", partition=date)
 	
 	# Create partition in table for FT B from raw data
-	bq.create_table_from_query(conf['ftB'], "./sql/product_catalog_samsung_without_image.sql", partition=date)	
+	bq.create_table_from_query(conf['ftB'], conf['raw'], "./sql/product_catalog_samsung_without_image.sql", partition=date)	
 
 
 if __name__ == "__main__":
