@@ -2,6 +2,14 @@
 
 ### Data Pipeline Assessment
 
+# Requirements
+
+These scripts require bigquery and jinja2 python libraries. Execute the following command in your virtualenv :
+
+```
+pip install -r requirements.txt
+```
+
 # Usage
 
 Credentials have to be setup in the environment (for example through the GOOGLE_APPLICATION_CREDENTIALS global variable)
