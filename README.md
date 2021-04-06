@@ -26,4 +26,4 @@ python bm_incremental.py --project <project_id> --dataset <dataset_id>
 
 ## Interview answers & explanations
 
-Please find a PDF document in the resources directory for answers of the questions & detailed explanations on the code
+Please find a PDF document in the resources directory for answers on the test questions & detailed explanations on the code
